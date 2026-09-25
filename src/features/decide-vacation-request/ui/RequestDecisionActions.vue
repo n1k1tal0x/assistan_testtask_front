@@ -76,11 +76,13 @@ async function confirmReject() {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  min-width: 200px;
+  min-width: 0;
+  width: 100%;
 }
 
 .decision__buttons {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
 }
 
