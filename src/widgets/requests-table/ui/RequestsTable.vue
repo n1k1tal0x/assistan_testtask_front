@@ -121,7 +121,8 @@ function handleFilterChange(event: Event) {
 
 .table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
 }
 
 .table th {
@@ -129,15 +130,28 @@ function handleFilterChange(event: Event) {
   font-size: 12.5px;
   font-weight: 600;
   color: var(--muted);
-  padding: 0 0 10px;
+  padding: 0 24px 12px 0;
   border-bottom: 1px solid var(--border);
 }
 
 .table td {
-  padding: 14px 10px 14px 0;
+  padding: 18px 24px 18px 0;
   border-bottom: 1px solid var(--border);
   vertical-align: top;
   font-size: 14.5px;
+  line-height: 1.5;
+}
+
+.table th:last-child,
+.table td:last-child {
+  padding-right: 0;
+}
+
+.table td:nth-child(2),
+.table th:nth-child(2),
+.table td:nth-child(3),
+.table th:nth-child(3) {
+  white-space: nowrap;
 }
 
 .table tbody tr:last-child td {
@@ -169,7 +183,7 @@ function handleFilterChange(event: Event) {
   .table tr {
     border: 1px solid var(--border);
     border-radius: var(--radius-lg);
-    padding: 14px 16px;
+    padding: 16px 18px;
     margin-bottom: 12px;
   }
 
@@ -178,7 +192,7 @@ function handleFilterChange(event: Event) {
     align-items: flex-start;
     justify-content: space-between;
     gap: 12px;
-    padding: 8px 0;
+    padding: 10px 0;
     border-bottom: none;
   }
 
