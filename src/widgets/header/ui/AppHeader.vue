@@ -17,6 +17,7 @@
       <nav class="header__nav">
         <RouterLink to="/" class="header__link">Главная</RouterLink>
         <RouterLink to="/requests" class="header__link">Список заявок</RouterLink>
+        <RouterLink to="/about" class="header__link">О нас</RouterLink>
       </nav>
     </div>
   </header>
