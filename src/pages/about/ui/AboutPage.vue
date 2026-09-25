@@ -17,6 +17,16 @@ const WATCH_SNIPPET = `watch([() => form.dateFrom, () => form.dateTo], ([dateFro
     errors.dateTo = undefined
   }
 })`
+
+const TEST_SNIPPET = `it("rejects a reason shorter than 20 characters", async () => {
+  const response = await app.inject({
+    method: "POST",
+    url: "/requests",
+    payload: { fullName: "...", dateFrom: futureDate(5), dateTo: futureDate(10), reason: "слишком коротко" },
+  })
+
+  assert.equal(response.statusCode, 400)
+})`
 </script>
 
 <template>
@@ -130,6 +140,28 @@ const WATCH_SNIPPET = `watch([() => form.dateFrom, () => form.dateTo], ([dateFro
         и в списке заявок: когда <code>features/decide-vacation-request</code> получает
         ответ от API, он просто заменяет заявку в реактивном массиве — и строка таблицы
         перерисовывается сама.
+      </p>
+    </BaseCard>
+
+    <BaseCard>
+      <h2 class="section__title">Тесты</h2>
+      <p class="section__text">
+        Бэкенд покрыт тестами на встроенном тест-раннере Node.js (<code>node:test</code>) —
+        без отдельного фреймворка. Fastify умеет вызывать роуты напрямую через
+        <code>app.inject()</code>, без реального сетевого порта, поэтому ради тестируемости
+        сборка приложения вынесена в <code>src/app.ts</code> (<code>buildApp()</code>)
+        отдельно от <code>src/index.ts</code>, который просто её запускает:
+      </p>
+
+      <pre class="code"><code>{{ TEST_SNIPPET }}</code></pre>
+
+      <p class="section__text">
+        Всего 13 тестов: создание заявки и вся валидация из блока выше, доступ к списку по
+        паролю и фильтр по статусу, и весь флоу решения — одобрение, повторное решение
+        (<code>409</code>), несуществующий <code>id</code> (<code>404</code>), отказ без
+        причины (<code>400</code>) и то, что причина отказа видна после отклонения. Между
+        тестами хранилище заявок сбрасывается, чтобы они не влияли друг на друга. Запускаются
+        командой <code>npm test</code>.
       </p>
     </BaseCard>
   </section>
