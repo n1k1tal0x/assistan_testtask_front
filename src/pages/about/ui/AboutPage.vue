@@ -50,7 +50,9 @@ const WATCH_SNIPPET = `watch([() => form.dateFrom, () => form.dateTo], ([dateFro
           <code>PATCH .../approve</code>, <code>.../reject</code>) поверх хранилища заявок
           в памяти процесса. Схема для PostgreSQL описана code-first через Drizzle ORM —
           миграции генерируются из TypeScript, а не пишутся вручную. Просмотр списка закрыт
-          паролем из переменной окружения.
+          паролем из переменной окружения. Ключевые случаи (валидация, пароль, одобрение/отказ)
+          покрыты тестами на <code>node:test</code> через <code>app.inject()</code> — без
+          реального сетевого порта.
         </p>
       </BaseCard>
 
@@ -63,6 +65,25 @@ const WATCH_SNIPPET = `watch([() => form.dateFrom, () => form.dateTo], ([dateFro
         </p>
       </BaseCard>
     </div>
+
+    <BaseCard>
+      <h2 class="section__title">Валидация данных</h2>
+      <p class="section__text">
+        Заявка проверяется дважды: сразу в форме, чтобы не ждать ответа сервера, и ещё раз
+        на бэкенде — он не доверяет фронтенду и переповторяет те же правила перед записью.
+      </p>
+      <ul class="list">
+        <li>ФИО, обе даты и причина обязательны.</li>
+        <li>Причина — не короче 20 символов.</li>
+        <li>Дата «с» не может быть раньше сегодняшнего дня.</li>
+        <li>Дата «по» не может быть раньше даты «с».</li>
+      </ul>
+      <p class="section__text">
+        На фронтенде часть проверок — живые (реагируют на ввод, см. ниже про реактивность),
+        часть — при отправке формы. На бэкенде нарушение любого правила — это
+        <code>400 Bad Request</code> с описанием, что не так; заявка не создаётся.
+      </p>
+    </BaseCard>
 
     <BaseCard>
       <h2 class="section__title">Архитектура фронтенда: FSD</h2>
@@ -159,6 +180,7 @@ const WATCH_SNIPPET = `watch([() => form.dateFrom, () => form.dateTo], ([dateFro
 .list {
   list-style: disc;
   padding-left: 20px;
+  margin-top: 14px;
   color: var(--ink-soft);
   font-size: 14.5px;
   display: flex;
