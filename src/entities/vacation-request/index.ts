@@ -13,4 +13,5 @@ export {
 } from './api/vacationRequestApi'
 export { calculateDays } from './lib/calculateDays'
 export { formatDate } from './lib/formatDate'
+export { pluralizeDays } from './lib/pluralizeDays'
 export { default as StatusBadge } from './ui/StatusBadge.vue'
