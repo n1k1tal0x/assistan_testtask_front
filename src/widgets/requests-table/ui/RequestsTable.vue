@@ -26,6 +26,7 @@ function handleFilterChange(event: Event) {
 <template>
   <div class="requests">
     <div class="requests__toolbar">
+      <h1 class="requests__title">Список заявок</h1>
       <label class="requests__filter">
         <span>Статус</span>
         <select :value="statusFilter" @change="handleFilterChange">
@@ -66,7 +67,16 @@ function handleFilterChange(event: Event) {
 
 .requests__toolbar {
   display: flex;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.requests__title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--ink);
 }
 
 .requests__filter {

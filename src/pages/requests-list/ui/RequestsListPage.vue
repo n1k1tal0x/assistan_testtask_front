@@ -15,7 +15,6 @@ const { isUnlocked } = useListAccess()
     </template>
 
     <template v-else>
-      <h1 class="page__title">Список заявок</h1>
       <BaseCard>
         <RequestsTable />
       </BaseCard>
@@ -28,12 +27,6 @@ const { isUnlocked } = useListAccess()
   max-width: 760px;
   margin: 0 auto;
   padding: 48px 28px 64px;
-}
-
-.page__title {
-  font-size: 26px;
-  font-weight: 600;
-  margin-bottom: 22px;
 }
 
 @media (max-width: 560px) {
