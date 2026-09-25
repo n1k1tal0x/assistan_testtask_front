@@ -3,6 +3,16 @@ import { ApiError } from '@/shared/api/http'
 import { createVacationRequest } from '@/entities/vacation-request'
 
 const DATE_ORDER_ERROR = 'Дата окончания не может быть раньше даты начала'
+const PAST_DATE_ERROR = 'Дата не может быть раньше сегодняшнего дня'
+const MIN_REASON_LENGTH = 20
+
+export function todayISODate(): string {
+  const now = new Date()
+  const year = now.getFullYear()
+  const month = String(now.getMonth() + 1).padStart(2, '0')
+  const day = String(now.getDate()).padStart(2, '0')
+  return `${year}-${month}-${day}`
+}
 
 interface FormState {
   fullName: string
@@ -31,20 +41,37 @@ export function useSubmitVacationRequest() {
 
   function validate(): boolean {
     errors.fullName = form.fullName.trim() ? undefined : 'Укажите ФИО'
-    errors.dateFrom = form.dateFrom ? undefined : 'Укажите дату начала'
-    errors.dateTo = form.dateTo ? undefined : 'Укажите дату окончания'
 
+    errors.dateFrom = form.dateFrom ? undefined : 'Укажите дату начала'
+    if (form.dateFrom && form.dateFrom < todayISODate()) {
+      errors.dateFrom = PAST_DATE_ERROR
+    }
+
+    errors.dateTo = form.dateTo ? undefined : 'Укажите дату окончания'
     if (form.dateFrom && form.dateTo && form.dateTo < form.dateFrom) {
       errors.dateTo = DATE_ORDER_ERROR
     }
 
-    errors.reason = form.reason.trim() ? undefined : 'Укажите причину'
+    const reason = form.reason.trim()
+    if (!reason) {
+      errors.reason = 'Укажите причину'
+    } else if (reason.length < MIN_REASON_LENGTH) {
+      errors.reason = `Причина должна быть не короче ${MIN_REASON_LENGTH} символов`
+    } else {
+      errors.reason = undefined
+    }
 
     return !errors.fullName && !errors.dateFrom && !errors.dateTo && !errors.reason
   }
 
-  // Проверяем порядок дат сразу при вводе, не дожидаясь сабмита.
+  // Проверяем даты сразу при вводе, не дожидаясь сабмита.
   watch([() => form.dateFrom, () => form.dateTo], ([dateFrom, dateTo]) => {
+    if (dateFrom && dateFrom < todayISODate()) {
+      errors.dateFrom = PAST_DATE_ERROR
+    } else if (errors.dateFrom === PAST_DATE_ERROR) {
+      errors.dateFrom = undefined
+    }
+
     if (dateFrom && dateTo && dateTo < dateFrom) {
       errors.dateTo = DATE_ORDER_ERROR
     } else if (errors.dateTo === DATE_ORDER_ERROR) {

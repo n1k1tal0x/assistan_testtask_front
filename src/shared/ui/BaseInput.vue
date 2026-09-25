@@ -5,6 +5,7 @@ defineProps<{
   type?: string
   error?: string
   placeholder?: string
+  min?: string
 }>()
 
 defineEmits<{
@@ -21,6 +22,7 @@ defineEmits<{
       :type="type ?? 'text'"
       :value="modelValue"
       :placeholder="placeholder"
+      :min="min"
       @input="$emit('update:modelValue', ($event.target as HTMLInputElement).value)"
     />
     <span v-if="error" class="field__error">{{ error }}</span>

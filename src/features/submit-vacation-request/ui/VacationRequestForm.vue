@@ -3,9 +3,10 @@ import BaseButton from '@/shared/ui/BaseButton.vue'
 import BaseInput from '@/shared/ui/BaseInput.vue'
 import BaseTextarea from '@/shared/ui/BaseTextarea.vue'
 import InlineAlert from '@/shared/ui/InlineAlert.vue'
-import { useSubmitVacationRequest } from '../model/useSubmitVacationRequest'
+import { useSubmitVacationRequest, todayISODate } from '../model/useSubmitVacationRequest'
 
 const { form, errors, isSubmitting, submitError, isSubmitted, submit } = useSubmitVacationRequest()
+const minDate = todayISODate()
 </script>
 
 <template>
@@ -13,14 +14,14 @@ const { form, errors, isSubmitting, submitError, isSubmitted, submit } = useSubm
     <BaseInput v-model="form.fullName" label="ФИО" placeholder="Иванов Иван Иванович" :error="errors.fullName" />
 
     <div class="form__row">
-      <BaseInput v-model="form.dateFrom" type="date" label="Дата с" :error="errors.dateFrom" />
-      <BaseInput v-model="form.dateTo" type="date" label="Дата по" :error="errors.dateTo" />
+      <BaseInput v-model="form.dateFrom" type="date" label="Дата с" :min="minDate" :error="errors.dateFrom" />
+      <BaseInput v-model="form.dateTo" type="date" label="Дата по" :min="minDate" :error="errors.dateTo" />
     </div>
 
     <BaseTextarea
       v-model="form.reason"
       label="Причина"
-      placeholder="Например: ежегодный отпуск"
+      placeholder="Например: ежегодный оплачиваемый отпуск (не менее 20 символов)"
       :error="errors.reason"
     />
 
