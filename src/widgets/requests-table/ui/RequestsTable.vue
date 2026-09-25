@@ -132,7 +132,7 @@ function handleFilterChange(event: Event) {
 .table__row {
   display: flex;
   align-items: flex-start;
-  gap: 20px;
+  gap: 14px;
   padding: 18px 0;
   border-bottom: 1px solid var(--border);
   min-width: 0;
@@ -155,24 +155,29 @@ function handleFilterChange(event: Event) {
 }
 
 .table__cell--name {
-  flex: 1 1 160px;
+  flex: 1 1 120px;
+  min-width: 90px;
 }
 
+/* Период/Дней/Статус — короткий контент без переноса, поэтому ширина
+   зафиксирована жёстко (flex-shrink: 0): сжатие + nowrap иначе даёт
+   визуальное наложение текста на соседние колонки. */
 .table__cell--period {
-  flex: 0 1 150px;
+  flex: 0 0 148px;
   white-space: nowrap;
 }
 
 .table__cell--days {
-  flex: 0 0 50px;
+  flex: 0 0 40px;
 }
 
 .table__cell--status {
-  flex: 0 0 100px;
+  flex: 0 0 92px;
 }
 
 .table__cell--decision {
-  flex: 1 1 220px;
+  flex: 1 1 180px;
+  min-width: 160px;
 }
 
 .requests__pagination {
