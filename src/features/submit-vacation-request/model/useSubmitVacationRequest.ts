@@ -1,6 +1,8 @@
-import { reactive, ref } from 'vue'
+import { reactive, ref, watch } from 'vue'
 import { ApiError } from '@/shared/api/http'
 import { createVacationRequest } from '@/entities/vacation-request'
+
+const DATE_ORDER_ERROR = 'Дата окончания не может быть раньше даты начала'
 
 interface FormState {
   fullName: string
@@ -33,13 +35,22 @@ export function useSubmitVacationRequest() {
     errors.dateTo = form.dateTo ? undefined : 'Укажите дату окончания'
 
     if (form.dateFrom && form.dateTo && form.dateTo < form.dateFrom) {
-      errors.dateTo = 'Дата окончания не может быть раньше даты начала'
+      errors.dateTo = DATE_ORDER_ERROR
     }
 
     errors.reason = form.reason.trim() ? undefined : 'Укажите причину'
 
     return !errors.fullName && !errors.dateFrom && !errors.dateTo && !errors.reason
   }
+
+  // Проверяем порядок дат сразу при вводе, не дожидаясь сабмита.
+  watch([() => form.dateFrom, () => form.dateTo], ([dateFrom, dateTo]) => {
+    if (dateFrom && dateTo && dateTo < dateFrom) {
+      errors.dateTo = DATE_ORDER_ERROR
+    } else if (errors.dateTo === DATE_ORDER_ERROR) {
+      errors.dateTo = undefined
+    }
+  })
 
   async function submit() {
     submitError.value = ''
